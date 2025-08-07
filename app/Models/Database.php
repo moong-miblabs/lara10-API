@@ -61,6 +61,7 @@ class Database
                 ruang_id CHAR(3), FOREIGN KEY (ruang_id) REFERENCES ms_ruang (id) ON UPDATE CASCADE ON DELETE SET NULL,
                 tanggal_lahir DATE,
                 jenis_kelamin CHAR(1),
+                first_assesmen CHAR(36),
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 deleted_at TIMESTAMP DEFAULT NULL

@@ -10,9 +10,9 @@ class Pasien
 {
     static $table       = 'pasien';
     static $allias      = 'pp';
-    static $columns     = ['id','nama_pasien','agama_id','ruang_id','tanggal_lahir','jenis_kelamin','created_at','updated_at','deleted_at'];
-    static $readable    = ['id','nama_pasien','agama_id','ruang_id','tanggal_lahir','jenis_kelamin'];
-    static $fillable    = ['nama_pasien','agama_id','ruang_id','tanggal_lahir','jenis_kelamin'];
+    static $columns     = ['id','nama_pasien','agama_id','ruang_id','tanggal_lahir','jenis_kelamin','first_assesmen','created_at','updated_at','deleted_at'];
+    static $readable    = ['id','nama_pasien','agama_id','ruang_id','tanggal_lahir','jenis_kelamin','first_assesmen'];
+    static $fillable    = ['nama_pasien','agama_id','ruang_id','tanggal_lahir','jenis_kelamin','first_assesmen'];
     static $order       = ['nama_pasien','ASC'];
 
     static function getColumns(array $whitelist=[]) : array {
