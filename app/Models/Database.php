@@ -72,7 +72,13 @@ class Database
                 pasien_id CHAR(36), FOREIGN KEY (pasien_id) REFERENCES pasien (id) ON UPDATE CASCADE ON DELETE SET NULL,
                 c1 CHAR(1),
                 e1 TEXT,
+                skor INT,
+                klasifikasi TEXT,
+                keyakinan SMALLINT,
+                praktik SMALLINT,
+                pengalaman SMALLINT,
                 perasaan VARCHAR(100),
+                resume_terapis TEXT,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 deleted_at TIMESTAMP DEFAULT NULL
@@ -105,7 +111,24 @@ class Database
             ON DUPLICATE KEY UPDATE id=id;
 
             INSERT INTO ms_ruang(id, nama_device, gedung, lantai, kamar, created_at, updated_at) VALUES
-                ('xyz', 'Speaker-Anggrek1-101', 'Gedung Anggrek', 'Anggrek 1', '101', NOW(), NOW())
+                ('xyz', 'Speaker-Anggrek1-101', 'Gedung Anggrek', 'Lantai 1', 'Ruang Rawat 101', NOW(), NOW()),
+                ('g1u', 'Speaker-Mawar-01', 'Gedung Mawar', 'Lantai 1', 'Ruang Rawat 101', NOW(), NOW()),
+                ('p2k', 'Speaker-Mawar-02', 'Gedung Mawar', 'Lantai 1', 'Ruang Rawat 102', NOW(), NOW()),
+                ('q3j', 'Speaker-Mawar-03', 'Gedung Mawar', 'Lantai 1', 'Ruang Rawat 103', NOW(), NOW()),
+                ('l4i', 'Speaker-Mawar-04', 'Gedung Mawar', 'Lantai 2', 'Ruang Rawat 201', NOW(), NOW()),
+                ('m5h', 'Speaker-Mawar-05', 'Gedung Mawar', 'Lantai 2', 'Ruang Rawat 202', NOW(), NOW()),
+                ('f6g', 'Speaker-Mawar-06', 'Gedung Mawar', 'Lantai 2', 'Ruang Rawat 203', NOW(), NOW()),
+                ('e7f', 'Speaker-Anggrek-02', 'Gedung Anggrek', 'Lantai 3', 'Ruang Rawat 301', NOW(), NOW()),
+                ('d8e', 'Speaker-Anggrek-03', 'Gedung Anggrek', 'Lantai 3', 'Ruang Rawat 302', NOW(), NOW()),
+                ('c9d', 'Speaker-Anggrek-04', 'Gedung Anggrek', 'Lantai 3', 'Ruang Rawat 303', NOW(), NOW()),
+                ('b1c', 'Speaker-Kenanga-01', 'Gedung Kenanga', 'Lantai 4', 'Ruang Tunggu 401', NOW(), NOW()),
+                ('a2b', 'Speaker-Kenanga-02', 'Gedung Kenanga', 'Lantai 4', 'Ruang Tunggu 402', NOW(), NOW()),
+                ('z3a', 'Speaker-Kenanga-03', 'Gedung Kenanga', 'Lantai 4', 'Ruang Tunggu 403', NOW(), NOW()),
+                ('y4z', 'Speaker-Teratai-01', 'Gedung Teratai', 'Lantai 5', 'Ruang Operasi 1', NOW(), NOW()),
+                ('x5y', 'Speaker-Teratai-02', 'Gedung Teratai', 'Lantai 5', 'Ruang Operasi 2', NOW(), NOW()),
+                ('w6x', 'Speaker-Teratai-03', 'Gedung Teratai', 'Lantai 5', 'Ruang Operasi 3', NOW(), NOW()),
+                ('v7w', 'Speaker-Auditorium-01', 'Gedung Rektorat', 'Lantai 1', 'Ruang Auditorium', NOW(), NOW()),
+                ('u8v', 'Speaker-Pertemuan-01', 'Gedung Rektorat', 'Lantai 1', 'Ruang Pertemuan', NOW(), NOW())
             ON DUPLICATE KEY UPDATE id=id;
         ");
     }

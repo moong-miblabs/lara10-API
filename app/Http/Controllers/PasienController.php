@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Agama;
 use App\Models\Ruang;
+use App\Models\Assesmen;
 
 class PasienController extends Controller
 {
@@ -17,7 +18,20 @@ class PasienController extends Controller
      */
     public function index()
     {
-        $data = DB::table(Pasien::getTable())->select(Pasien::getColumns())->whereNull('deleted_at')->orderByRaw(Pasien::getOrder())->get();
+        $data = DB::select("
+            SELECT
+                pp.id, pp.nama_pasien, rg.nama_device, rg.gedung, rg.lantai, rg.kamar, ra.nama_agama
+            FROM
+                pasien pp
+            LEFT JOIN 
+                ms_ruang rg ON pp.ruang_id = rg.id
+            LEFT JOIN
+                ref_agama ra ON pp.agama_id = ra.id
+            WHERE
+                pp.deleted_at IS NULL
+            ORDER BY
+                nama_pasien ASC
+            ");
         $response = [
             'from' => "PasienController@index",
             'status' => "success",
@@ -77,18 +91,22 @@ class PasienController extends Controller
         $columns = Pasien::getColumns();
         $column_agama = Agama::getColumnAllias();
         $column_ruang = Ruang::getColumnAllias();
+        $column_assesmen = Assesmen::getColumnAllias();
         $data = DB::table(Pasien::getTable())
         ->leftJoin(Agama::getTable(),'pp.agama_id','=','ra.id')
         ->leftJoin(Ruang::getTable(),'pp.ruang_id','=','rg.id')
-        ->select($columns)->addSelect($column_agama)->addSelect($column_ruang)
-        ->whereNull('pp.deleted_at')->get();
+        ->leftJoin(Assesmen::getTable(),'pp.first_assesmen','=','as.id')
+        ->select($columns)->addSelect($column_agama)->addSelect($column_ruang)->addSelect($column_assesmen)
+        ->whereNull('pp.deleted_at')
+        ->where('pp.id',$id)
+        ->get();
         $response = [
             'from' => "PasienController@show",
             'status' => "success",
             'code' => 200,
             'desc' => [],
             'message' => "",
-            'data' => $data
+            'data' => $data[0]
         ];
         return response()->json($this->jsendJson($response),$this->jsendCode($response));
     }

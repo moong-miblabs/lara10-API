@@ -12,9 +12,13 @@ class AssesmenController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = DB::table(Assesmen::getTable())->select(Assesmen::getColumns())->whereNull('deleted_at')->orderByRaw(Assesmen::getOrder())->get();
+        $db = DB::table(Assesmen::getTable())->select(Assesmen::getColumns())->whereNull('deleted_at')->orderByRaw(Assesmen::getOrder());
+        if($request->input('pasien_id')) {
+            $db->where('as.pasien_id',$request->input('pasien_id'));
+        }
+        $data = $db->get();
         $response = [
             'from' => "AssesmenController@index",
             'status' => "success",

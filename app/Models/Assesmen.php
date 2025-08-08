@@ -10,9 +10,9 @@ class Assesmen
 {
     static $table       = 'assesmen';
     static $allias      = 'as';
-    static $columns     = ['id','pasien_id','c1','e1','perasaan','created_at','updated_at','deleted_at'];
-    static $readable    = ['id','pasien_id','c1','e1','perasaan'];
-    static $fillable    = ['pasien_id','c1','e1','perasaan'];
+    static $columns     = ['id','pasien_id','c1','e1','skor','klasifikasi','keyakinan','praktik','pengalaman','perasaan','resume_terapis','created_at','updated_at','deleted_at'];
+    static $readable    = ['id','pasien_id','c1','e1','skor','klasifikasi','keyakinan','praktik','pengalaman','perasaan','resume_terapis','created_at'];
+    static $fillable    = ['pasien_id','c1','e1','skor','klasifikasi','keyakinan','praktik','pengalaman','perasaan','resume_terapis'];
     static $order       = ['created_at','DESC'];
 
     static function getColumns(array $whitelist=[]) : array {
