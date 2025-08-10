@@ -13,8 +13,8 @@ Route::controller(RoleController::class)->prefix('role')->group(function () {
     Route::get('/','index');
 });
 
-use App\Http\Controllers\RuangController;
-Route::controller(RuangController::class)->prefix('ruang')->group(function () {
+use App\Http\Controllers\DeviceController;
+Route::controller(DeviceController::class)->prefix('device')->group(function () {
     Route::get('/','index');
 });
 
@@ -41,6 +41,22 @@ Route::controller(PasienController::class)->prefix('pasien')->group(function () 
 
 use App\Http\Controllers\AssesmenController;
 Route::controller(AssesmenController::class)->prefix('assesmen')->group(function () {
+    Route::get('/','index');
+    Route::get('/{id}','show');
+    Route::post('/','create');
+    Route::patch('/{id}','edit');
+    Route::delete('/{id}','destroy');
+});
+
+use App\Http\Controllers\MasterToSlave;
+Route::controller(MasterToSlave::class)->prefix('mts')->group(function () {
+    Route::get('/','see');
+    Route::post('/','turn_on');
+    Route::get('/off','turn_off');
+});
+
+use App\Http\Controllers\AudioController;
+Route::controller(AudioController::class)->prefix('audio')->group(function () {
     Route::get('/','index');
     Route::get('/{id}','show');
     Route::post('/','create');

@@ -2,39 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pasien;
+use App\Models\Audio;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
-use App\Models\Agama;
-use App\Models\Device;
-use App\Models\Assesmen;
-use Hidehalo\Nanoid\Client;
-
-class PasienController extends Controller
+class AudioController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = DB::select("
-            SELECT
-                pp.id, pp.nama_pasien, dv.nama_device, dv.gedung, dv.lantai, dv.kamar, dv.kasur, ra.nama_agama
-            FROM
-                pasien pp
-            LEFT JOIN 
-                ms_device dv ON pp.device_id = dv.id
-            LEFT JOIN
-                ref_agama ra ON pp.agama_id = ra.id
-            WHERE
-                pp.deleted_at IS NULL
-            ORDER BY
-                nama_pasien ASC
-            ");
+        $db = DB::table(Audio::getTable())->select(Audio::getColumns())->whereNull('deleted_at')->orderByRaw(Audio::getOrder());
+        if($request->input('agama_id')) {
+            $db->where('au.agama_id',$request->input('agama_id'));
+        }
+        $data = $db->get();
         $response = [
-            'from' => "PasienController@index",
+            'from' => "AudioController@index",
             'status' => "success",
             'code' => 200,
             'desc' => [],
@@ -50,21 +35,15 @@ class PasienController extends Controller
     public function create(Request $request)
     {
         $input = $request->all();
-        $client = new Client();
-        $input['pin'] = $client->formattedId('1234567890', 6);
         $rules = [
-            'nama_pasien'   => "required",
-            'agama_id'      => "required",
-            'device_id'      => "required",
-            'tanggal_lahir' => "required",
-            'jenis_kelamin' => "required"
+            'pasien_id' => "required",
         ];
 
         $validator = Validator::make($input,$rules);
 
         if ($validator->fails()) {
             $response = [
-                'from' => "PasienController@create",
+                'from' => "AudioController@create",
                 'status' => "fail",
                 'code' => 400,
                 'desc' => $validator->errors()->toArray(),
@@ -74,9 +53,28 @@ class PasienController extends Controller
             return response()->json($this->jsendJson($response),$this->jsendCode($response));
         }
 
-        $data = Pasien::create($input);
+        $pasien_id = $request->input('pasien_id');
+        $is_first = DB::select("SELECT first_assesmen FROM pasien pp WHERE id=:id",['id'=>$pasien_id]);
+        $is_first = (array) $is_first[0];
+        if($is_first['first_assesmen']) {
+            $data = Audio::create($input);
+        } else {
+            $data = DB::transaction(function () use ($input) {
+                $now = Carbon::now(new \DateTimeZone(env('TIMEZONE','Asia/Jakarta')));
+
+                $columns = array_filter($input, fn($key) => in_array($key, ['pasien_id','keyakinan_c1','keyakinan_e1','praktik_c1','praktik_e1','pengalaman_c1','pengalaman_e1','skor','klasifikasi','keyakinan','praktik','pengalaman','perasaan','resume_terapis']), ARRAY_FILTER_USE_KEY);
+                if(empty($columns)) throw new \Exception('Data does not match the column.');
+                $columns['id'] = Uuid::uuid4()->toString();
+                $columns['created_at'] = $columns['updated_at'] = $now;
+
+                DB::table('pasien')->where('id',$input['pasien_id'])->whereNull('deleted_at')->update(['first_assesmen'=>$columns['id'], 'updated_at'=>$now]);
+                DB::table('assesmen')->insert($columns);
+                $data  = DB::table('assesmen')->find($columns['id']);
+                return (array) $data;
+            });
+        }
         $response = [
-            'from'      => "PasienController@create",
+            'from'      => "AudioController@create",
             'status'    => "success",
             'code'      => 200,
             'desc'      => [],
@@ -91,25 +89,14 @@ class PasienController extends Controller
      */
     public function show($id)
     {
-        $columns = Pasien::getColumns();
-        $column_agama = Agama::getColumnAllias();
-        $column_device = Device::getColumnAllias();
-        $column_assesmen = Assesmen::getColumnAllias();
-        $data = DB::table(Pasien::getTable())
-        ->leftJoin(Agama::getTable(),'pp.agama_id','=','ra.id')
-        ->leftJoin(Device::getTable(),'pp.device_id','=','dv.id')
-        ->leftJoin(Assesmen::getTable(),'pp.first_assesmen','=','as.id')
-        ->select($columns)->addSelect($column_agama)->addSelect($column_device)->addSelect($column_assesmen)
-        ->whereNull('pp.deleted_at')
-        ->where('pp.id',$id)
-        ->get();
+        $data = DB::table(Audio::getTable())->where('id',$id)->whereNull('deleted_at')->get();
         $response = [
-            'from' => "PasienController@show",
+            'from' => "AudioController@show",
             'status' => "success",
             'code' => 200,
             'desc' => [],
             'message' => "",
-            'data' => $data[0]
+            'data' => $data
         ];
         return response()->json($this->jsendJson($response),$this->jsendCode($response));
     }
@@ -121,10 +108,10 @@ class PasienController extends Controller
     {
         $input = $request->all();
         $filtered = array_filter($input, fn($value) => $value !== NULL && $value !== "");
-        $data = Pasien::update($id,$filtered);
+        $data = Audio::update($id,$filtered);
 
         $response = [
-            'from' => "PasienController@edit",
+            'from' => "AudioController@edit",
             'status' => "success",
             'code' => 200,
             'desc' => [],
@@ -139,9 +126,9 @@ class PasienController extends Controller
      */
     public function destroy($id)
     {
-        $data = Pasien::destroy($id);
+        $data = Audio::destroy($id);
         $response = [
-            'from' => "PasienController@destroy",
+            'from' => "AudioController@destroy",
             'status' => "success",
             'code' => 200,
             'desc' => [],

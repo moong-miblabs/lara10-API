@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Carbon;
 
-class Ruang
+class Device
 {
-    static $table       = 'ms_ruang';
-    static $allias      = 'rg';
-    static $columns     = ['id','nama_device','gedung','lantai','kamar','created_at','updated_at','deleted_at'];
-    static $readable    = ['id','nama_device','gedung','lantai','kamar'];
-    static $fillable    = ['nama_device','gedung','lantai','kamar'];
+    static $table       = 'ms_device';
+    static $allias      = 'dv';
+    static $columns     = ['id','nama_device','kasur','gedung','lantai','kamar','created_at','updated_at','deleted_at'];
+    static $readable    = ['id','nama_device','kasur','gedung','lantai','kamar'];
+    static $fillable    = ['nama_device','kasur','gedung','lantai','kamar'];
     static $order       = ['gedung','ASC'];
 
     static function getColumns(array $whitelist=[]) : array {
@@ -44,7 +44,7 @@ class Ruang
     }
 
     static function getOrder() : string {
-        return "rg.gedung ASC, rg.lantai ASC, rg.kamar ASC";
+        return "dv.gedung ASC, dv.lantai ASC, dv.kamar ASC, dv.kasur ASC, dv.nama_device";
     }
 
     static function create($assoc) {

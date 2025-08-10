@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ruang;
+use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class RuangController extends Controller
+class DeviceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = DB::table(Ruang::getTable())->select(Ruang::getColumns())->whereNull('deleted_at')->orderByRaw(Ruang::getOrder())->get();
+        $data = DB::table(Device::getTable())->select(Device::getColumns())->whereNull('deleted_at')->orderByRaw(Device::getOrder())->get();
         $response = [
-            'from' => "RuangController@index",
+            'from' => "DeviceController@index",
             'status' => "success",
             'code' => 200,
             'desc' => [],
@@ -39,7 +39,7 @@ class RuangController extends Controller
 
         if ($validator->fails()) {
             $response = [
-                'from'      => "RuangController@create",
+                'from'      => "DeviceController@create",
                 'status'    => "fail",
                 'code'      => 400,
                 'desc'      => $validator->errors()->toArray(),
@@ -49,9 +49,9 @@ class RuangController extends Controller
             return response()->json($this->jsendJson($response),$this->jsendCode($response));
         }
 
-        $data = Ruang::create($input);
+        $data = Device::create($input);
         $response = [
-            'from'      => "RuangController@create",
+            'from'      => "DeviceController@create",
             'status'    => "success",
             'code'      => 200,
             'desc'      => [],

@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Carbon;
 
-class Assesmen
+class Audio
 {
-    static $table       = 'assesmen';
-    static $allias      = 'as';
-    static $columns     = ['id','pasien_id','keyakinan_c1','keyakinan_e1','praktik_c1','praktik_e1','pengalaman_c1','pengalaman_e1','skor','klasifikasi','keyakinan','praktik','pengalaman','perasaan','resume_terapis','created_at','updated_at','deleted_at'];
-    static $readable    = ['id','pasien_id','keyakinan_c1','keyakinan_e1','praktik_c1','praktik_e1','pengalaman_c1','pengalaman_e1','skor','klasifikasi','keyakinan','praktik','pengalaman','perasaan','resume_terapis','created_at'];
-    static $fillable    = ['pasien_id','keyakinan_c1','keyakinan_e1','praktik_c1','praktik_e1','pengalaman_c1','pengalaman_e1','skor','klasifikasi','keyakinan','praktik','pengalaman','perasaan','resume_terapis'];
+    static $table       = 'ms_audio';
+    static $allias      = 'au';
+    static $columns     = ['id','agama_id','kategori','title','artist','album','artwork_src','artwork_sizes','artwork_type','created_at','updated_at','deleted_at'];
+    static $readable    = ['id','agama_id','kategori','title','artist','album','artwork_src','artwork_sizes','artwork_type','created_at'];
+    static $fillable    = ['agama_id','kategori','title','artist','album','artwork_src','artwork_sizes','artwork_type'];
     static $order       = ['created_at','DESC'];
 
     static function getColumns(array $whitelist=[]) : array {
