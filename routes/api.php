@@ -33,6 +33,8 @@ use App\Http\Controllers\PasienController;
 Route::controller(PasienController::class)->prefix('pasien')->group(function () {
     Route::get('/','index');
     Route::get('/{id}','show');
+    Route::get('/pin/{pin}','byPin');
+    Route::get('/device/{device_id}','byDeviceId');
     Route::post('/','create');
     Route::patch('/{id}','edit');
     Route::delete('/{id}','destroy');

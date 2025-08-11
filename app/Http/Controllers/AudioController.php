@@ -36,7 +36,7 @@ class AudioController extends Controller
     {
         $input = $request->all();
         $rules = [
-            'pasien_id' => "required",
+            'agama_id' => "required",
         ];
 
         $validator = Validator::make($input,$rules);
@@ -53,26 +53,8 @@ class AudioController extends Controller
             return response()->json($this->jsendJson($response),$this->jsendCode($response));
         }
 
-        $pasien_id = $request->input('pasien_id');
-        $is_first = DB::select("SELECT first_assesmen FROM pasien pp WHERE id=:id",['id'=>$pasien_id]);
-        $is_first = (array) $is_first[0];
-        if($is_first['first_assesmen']) {
-            $data = Audio::create($input);
-        } else {
-            $data = DB::transaction(function () use ($input) {
-                $now = Carbon::now(new \DateTimeZone(env('TIMEZONE','Asia/Jakarta')));
+        $data = Audio::create($input);
 
-                $columns = array_filter($input, fn($key) => in_array($key, ['pasien_id','keyakinan_c1','keyakinan_e1','praktik_c1','praktik_e1','pengalaman_c1','pengalaman_e1','skor','klasifikasi','keyakinan','praktik','pengalaman','perasaan','resume_terapis']), ARRAY_FILTER_USE_KEY);
-                if(empty($columns)) throw new \Exception('Data does not match the column.');
-                $columns['id'] = Uuid::uuid4()->toString();
-                $columns['created_at'] = $columns['updated_at'] = $now;
-
-                DB::table('pasien')->where('id',$input['pasien_id'])->whereNull('deleted_at')->update(['first_assesmen'=>$columns['id'], 'updated_at'=>$now]);
-                DB::table('assesmen')->insert($columns);
-                $data  = DB::table('assesmen')->find($columns['id']);
-                return (array) $data;
-            });
-        }
         $response = [
             'from'      => "AudioController@create",
             'status'    => "success",

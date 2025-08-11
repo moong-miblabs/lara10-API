@@ -10,9 +10,9 @@ class Audio
 {
     static $table       = 'ms_audio';
     static $allias      = 'au';
-    static $columns     = ['id','agama_id','kategori','title','artist','album','artwork_src','artwork_sizes','artwork_type','created_at','updated_at','deleted_at'];
-    static $readable    = ['id','agama_id','kategori','title','artist','album','artwork_src','artwork_sizes','artwork_type','created_at'];
-    static $fillable    = ['agama_id','kategori','title','artist','album','artwork_src','artwork_sizes','artwork_type'];
+    static $columns     = ['id','agama_id','kategori','src','title','artist','album','artwork_src','artwork_sizes','artwork_type','created_at','updated_at','deleted_at'];
+    static $readable    = ['id','agama_id','kategori','src','title','artist','album','artwork_src','artwork_sizes','artwork_type','created_at'];
+    static $fillable    = ['agama_id','kategori','src','title','artist','album','artwork_src','artwork_sizes','artwork_type'];
     static $order       = ['created_at','DESC'];
 
     static function getColumns(array $whitelist=[]) : array {

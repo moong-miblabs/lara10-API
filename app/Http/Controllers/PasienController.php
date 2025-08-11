@@ -44,6 +44,88 @@ class PasienController extends Controller
         return response()->json($this->jsendJson($response),$this->jsendCode($response));
     }
 
+    public function byPin($pin) {
+        $data = DB::select("
+            SELECT
+                pp.id AS pasien_id, pp.nama_pasien, pp.agama_id, ra.nama_agama, pp.device_id AS id, dv.nama_device AS nama
+            FROM
+                pasien AS pp
+            LEFT JOIN
+                ms_device AS dv ON pp.device_id = dv.id
+            LEFT JOIN
+                ref_agama AS ra ON pp.agama_id = ra.id
+            WHERE
+                pp.deleted_at IS NULL
+                AND pp.pin = :pin
+            ORDER BY
+                pp.created_at DESC
+            LIMIT 1
+        ",['pin'=>$pin]);
+
+        if(count($data)) {
+            $response = [
+                'from' => "PasienController@byPin",
+                'status' => "success",
+                'code' => 200,
+                'desc' => [],
+                'message' => "",
+                'data' => $data[0]
+            ];
+            return response()->json($this->jsendJson($response),$this->jsendCode($response));
+        } else {
+            $response = [
+                'from' => "PasienController@byPin",
+                'status' => "error",
+                'code' => 400,
+                'desc' => [],
+                'message' => "PIN tidak ditemukan",
+                'data' => $data
+            ];
+            return response()->json($this->jsendJson($response),$this->jsendCode($response));
+        }
+    }
+
+    public function byDeviceId($device_id) {
+        $data = DB::select("
+            SELECT
+                pp.id AS pasien_id, pp.nama_pasien, pp.agama_id, ra.nama_agama, pp.device_id AS id, dv.nama_device AS nama
+            FROM
+                pasien AS pp
+            LEFT JOIN
+                ms_device AS dv ON pp.device_id = dv.id
+            LEFT JOIN
+                ref_agama AS ra ON pp.agama_id = ra.id
+            WHERE
+                pp.deleted_at IS NULL
+                AND pp.device_id = :device_id
+            ORDER BY
+                pp.created_at DESC
+            LIMIT 1
+        ",['device_id'=>$device_id]);
+
+        if(count($data)) {
+            $response = [
+                'from' => "PasienController@byPin",
+                'status' => "success",
+                'code' => 200,
+                'desc' => [],
+                'message' => "",
+                'data' => $data[0]
+            ];
+            return response()->json($this->jsendJson($response),$this->jsendCode($response));
+        } else {
+            $response = [
+                'from' => "PasienController@byPin",
+                'status' => "error",
+                'code' => 400,
+                'desc' => [],
+                'message' => "PIN tidak ditemukan",
+                'data' => $data
+            ];
+            return response()->json($this->jsendJson($response),$this->jsendCode($response));
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      */

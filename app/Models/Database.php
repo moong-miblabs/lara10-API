@@ -31,11 +31,12 @@ class Database
             CREATE TABLE IF NOT EXISTS ms_audio (
                 id CHAR(36) PRIMARY KEY,
                 agama_id SMALLINT,
+                src TEXT,
                 kategori VARCHAR(255),
                 title VARCHAR(255),
                 artist VARCHAR(255),
                 album VARCHAR(255),
-                artwork_src VARCHAR(255),
+                artwork_src VARCHAR(255) DEFAULT '512.svg',
                 artwork_sizes VARCHAR(255) DEFAULT '512x512',
                 artwork_type VARCHAR(255) DEFAULT 'image/jpg',
                 created_at DATETIME NOT NULL,
@@ -84,7 +85,8 @@ class Database
                 audio_id CHAR(36),
                 `on` DATETIME,
                 `off` DATETIME,
-                `light` BOOLEAN
+                `light` BOOLEAN,
+                `task` VARCHAR(8) DEFAULT 'play'
             );
 
             CREATE TABLE IF NOT EXISTS ms_role (
@@ -165,7 +167,7 @@ class Database
                 ('abc','123456','MUNJI HANAFI',1,'xyz','1993-06-10','L',NOW(),NOW())
             ON DUPLICATE KEY UPDATE id=id;
 
-            INSERT INTO ms_audio (id,agama_id,kategori,title,artist,album,artwork_src,created_at,updated_at) VALUES 
+            INSERT INTO ms_audio (id,agama_id,kategori,title,artist,album,src,created_at,updated_at) VALUES 
                 (UUID(),1,'Sholawat','Syi\'ir Tanpo Waton','Gus Mochammad Nizam','Sholawat','Sholawat tanpa musik YA RASSULLALLAH SALAMUN ALAIK nada Syiir tanpo waton Gus Dur tanpa musik.mp3',NOW(),NOW()),
                 (UUID(),1,'Sholawat','Maula ya salli wa sallim daiman abadan','M Tariq & M Yusuf','Sholawat','Maula ya salli wa sallim daiman abadan_ Muhammad Tariq & Muhammad Yusuf Medly.mp3',NOW(),NOW()),
                 (UUID(),1,'Zikir','Tarhim','Syeikh Mahmud Khalil Al-Hushariy','Zikir','SHOLAWAT TARHIM DI SEBUAH DESA MENJELANG MAGHRIB.mp3',NOW(),NOW()),
